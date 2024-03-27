@@ -10,17 +10,17 @@ class Program
             get;//get the data
             set;
         }
-        private int _Quantity;//i add it because it requires to create private quantity
+        private int _quantity;//i add it because it requires to create private quantity
         public int Quantity//to use it in sum method it must be public
         {
             get;
             set;
         }
         //DateTime is a data type
-        private DateTime CreatedDate
+        public DateTime CreatedDate
         {
             get;
-            set;
+            private set;
         }
         public Item(string name, int quantity, DateTime createdDate = default)//helps to assign the value later
         {
@@ -49,9 +49,6 @@ class Program
         {
             this.maxCapacity = maxCapacityConst;
 
-
-
-
         }//<=constructor for capacity
 
         public void AddItem(Item item)
@@ -61,8 +58,6 @@ class Program
                 Console.WriteLine("===CAN NOT ADD !===The limit of capacity is 100 items");
 
             }
-
-
             //do not add items if it is already there
             bool isItemExist = items.Any((product) => product.Name == item.Name);//inside any a condition if they have the same name than do not add it or delete it
             if (isItemExist == true)
@@ -77,7 +72,7 @@ class Program
             }
 
         }
-        public void printList()
+        public void PrintList()
         {
             foreach (var i in items)
             {
@@ -113,22 +108,32 @@ class Program
             Item? findsByName = items.FirstOrDefault((theName) => theName.Name == itemName);
 
             return findsByName;
-
-
         }
         public List<Item> SortByNameAsc()//return a list
         {
             return items.OrderBy(product => product.Name).ToList();//convert it to list
 
         }
-        //public List<Item>SortByDate//++++++++later++++++
-
+        public IEnumerable<Item> SortByDate(SortOrder sortOrder)
+        {
+            if (sortOrder == SortOrder.ASC)
+            {
+                return items.OrderBy(i => i.CreatedDate);
+            }
+            else
+            {
+                return items.OrderByDescending(i => i.CreatedDate);
+            }
+        }
+        public enum SortOrder
+        {
+            ASC,
+            DESC
+        }
     }
 
     public static void Main(string[] args)
     {
-
-
         var chocolateBar = new Item("Chocolate Bar", 15, new DateTime(2023, 2, 1));
         var coffee = new Item("Coffee", 20);//output is nothing until i create override method
         var coffee1 = new Item("Coffee", 20);
@@ -145,13 +150,14 @@ class Program
         store.AddItem(sodaCan);
         store.AddItem(sandwich);
 
+        Console.WriteLine($"Before sorting by date:");
 
 
-        store.printList();//print the list
+        store.PrintList();//print the list
         Console.WriteLine($"\n****************************************************************************************");
 
         store.DeleteItem("Sandwich");//deleting item by its name
-        store.printList();
+        store.PrintList();
         Console.WriteLine($"\n****************************************************************************************");
         Console.WriteLine($"The Quantity of items is :{store.GetCurrentVolume()}");
         Console.WriteLine("\n***************************************************************************************\n");
@@ -165,14 +171,14 @@ class Program
 
 
         }
+        Console.WriteLine($"\n *************************************************************************************");
+        var collectionSortedByDate = store.SortByDate(Store.SortOrder.ASC);
+        Console.WriteLine($"After sorting the date:");
+        foreach (var d in collectionSortedByDate)
+        {
+            Console.WriteLine($"{d}");
 
-
-
-
-
-
-
-
+        }
 
 
     }
