@@ -44,8 +44,26 @@ class Program
     {
         private List<Item> items = new List<Item>();//empty collection
                                                     //class name Item
+        private int maxCapacity;//capacity of items
+        public Store(int maxCapacityConst)
+        {
+            this.maxCapacity = maxCapacityConst;
+
+
+
+
+        }//<=constructor for capacity
+
         public void AddItem(Item item)
-        {//do not add items if it is already there
+        {//Modify the add method to not overload the capacity
+            if (GetCurrentVolume() + item.Quantity > maxCapacity)
+            {
+                Console.WriteLine("===CAN NOT ADD !===The limit of capacity is 100 items");
+
+            }
+
+
+            //do not add items if it is already there
             bool isItemExist = items.Any((product) => product.Name == item.Name);//inside any a condition if they have the same name than do not add it or delete it
             if (isItemExist == true)
             {
@@ -103,7 +121,7 @@ class Program
             return items.OrderBy(product => product.Name).ToList();//convert it to list
 
         }
-
+        //public List<Item>SortByDate//++++++++later++++++
 
     }
 
@@ -114,12 +132,12 @@ class Program
         var chocolateBar = new Item("Chocolate Bar", 15, new DateTime(2023, 2, 1));
         var coffee = new Item("Coffee", 20);//output is nothing until i create override method
         var coffee1 = new Item("Coffee", 20);
-        var chipsBag = new Item("Chips Bag", 25, new DateTime(2023, 6, 1));
+        var chipsBag = new Item("Chips Bag", 26, new DateTime(2023, 6, 1));
         var sodaCan = new Item("Soda Can", 8, new DateTime(2023, 7, 1));
-        var sandwich = new Item("Sandwich", 15);
+        var sandwich = new Item("Sandwich", 15);//deleted
 
         //access the list
-        var store = new Store();
+        var store = new Store(100);//capacity added "100"
         store.AddItem(coffee);//adding item
         store.AddItem(chocolateBar);
         store.AddItem(coffee1);//item is already added
