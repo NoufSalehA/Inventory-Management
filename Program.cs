@@ -70,14 +70,12 @@ class Program
             {
                 items.Add(item);
             }
-
         }
         public void PrintList()
         {
             foreach (var i in items)
             {
                 Console.WriteLine($"{i}");
-
             }
 
         }
@@ -89,14 +87,12 @@ class Program
 
                 items.Remove(itemDelete);
                 Console.WriteLine($"----Deleted----");
-
             }
             else
             {
                 Console.WriteLine("---Item is not found---");
 
             }
-
         }
         public int GetCurrentVolume()
         {//compute the total of quantities
@@ -130,6 +126,14 @@ class Program
             ASC,
             DESC
         }
+        public (IEnumerable<Item> NewArrivals, IEnumerable<Item> OldItems) GroupByDate()
+        {
+            var currentDate = DateTime.Now;
+            var threeMonthsAgo = currentDate.AddMonths(-3);
+            var newArrivals = items.Where(item => item.CreatedDate >= threeMonthsAgo);
+            var oldItems = items.Where(item => item.CreatedDate < threeMonthsAgo);
+            return (newArrivals, oldItems);
+        }
     }
 
     public static void Main(string[] args)
@@ -151,8 +155,6 @@ class Program
         store.AddItem(sandwich);
 
         Console.WriteLine($"Before sorting by date:");
-
-
         store.PrintList();//print the list
         Console.WriteLine($"\n****************************************************************************************");
 
@@ -168,32 +170,47 @@ class Program
         foreach (var sorted in sortedItems)
         {
             Console.WriteLine($"{sorted}");
+        }
+        Console.WriteLine($"\n *************************************************************************************");
+        Console.WriteLine($"ASC");
 
+        var collectionSortedByDateAsc = store.SortByDate(Store.SortOrder.ASC);
+        Console.WriteLine($"After sorting the date:");
+        foreach (var d in collectionSortedByDateAsc)
+        {
+            Console.WriteLine($"{d}");
 
         }
         Console.WriteLine($"\n *************************************************************************************");
-        var collectionSortedByDate = store.SortByDate(Store.SortOrder.ASC);
+        Console.WriteLine($"DESC");
+
+        var collectionSortedByDateDesc = store.SortByDate(Store.SortOrder.DESC);
         Console.WriteLine($"After sorting the date:");
-        foreach (var d in collectionSortedByDate)
+        foreach (var d in collectionSortedByDateDesc)
         {
             Console.WriteLine($"{d}");
 
         }
 
+        var groupByDate = store.GroupByDate();
+        Console.WriteLine("*******************************************************************");
 
+        Console.WriteLine("New Arrival Items:");
+        foreach (var item in groupByDate.NewArrivals)
+        {
+            Console.WriteLine($" [New] - {item.Name}, Created: {item.CreatedDate.ToShortDateString()}");
+        }
+        Console.WriteLine($"*******************************************************************");
+
+        Console.WriteLine("\nOld Items:");
+        int number = 1;
+
+        foreach (var item in groupByDate.OldItems)
+        {
+            Console.WriteLine($" {number} - {item.Name}, Created: {item.CreatedDate.ToShortDateString()}");
+            number++;
+
+        }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }
