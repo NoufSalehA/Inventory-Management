@@ -60,11 +60,9 @@ class Program
             }
             //do not add items if it is already there
             bool isItemExist = items.Any((product) => product.Name == item.Name);//inside any a condition if they have the same name than do not add it or delete it
-            if (isItemExist == true)
+            if (isItemExist)
             {
                 Console.WriteLine($"Item is already added");
-                return;
-
             }//items the list
             else
             {
